@@ -5,7 +5,7 @@ const adminTextController = {
   async addText(req, res) {
     try {
       // Ensure the user is an admin
-      if (req.role.role !== "admin") {
+      if (req.user.role !== "admin") {
         console.log("Permission denied. Only admins can create text entries.");
         return res.status(403).json({ message: "Permission denied. Only admins can create text entries." });
       }
@@ -15,7 +15,7 @@ const adminTextController = {
         subject: req.body.subject,
         subtitle: req.body.subtitle,
         textArea: req.body.textArea,
-        id: req.role._id, // Use the authenticated user's ID
+        id: req.user._id, // Use the authenticated user's ID
       });
 
       // Save the new text entry
