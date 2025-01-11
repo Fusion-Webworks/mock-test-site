@@ -12,6 +12,8 @@ const registerSchema = z.object({
   user: z.enum(["admin", "user", "guest"]),
 });
 
+//login schema
+
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
