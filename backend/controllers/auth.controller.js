@@ -35,6 +35,8 @@ const authController = {
       // Hash password using bcrypt
       const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
+
+  
       // Create a new user
       const newUser = new userModel({
         email: validatedData.email,
@@ -72,13 +74,13 @@ const authController = {
 
       // Generate a JWT token
       const token = jwt.sign(
-        { id: user._id, email: user.email, role: user.user }, // Including user role
-        process.env.JWT_SECRET,
+        { id: user._id, email: user.email, user: user.user }, // Including user role
+        "process.env.JWT_SECRET",
         { expiresIn: "1h" }
       );
 
       // Send the token in the response
-      res.status(200).json({ message: "Login successful", token });
+      res.status(200).json({ message: "Login successful", token, role: user.user });
     } catch (error) {
       console.error("Login error:", error.message);
       res.status(500).json({ message: "Server error", error: error.message });

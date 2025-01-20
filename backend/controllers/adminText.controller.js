@@ -5,7 +5,7 @@ const adminTextController = {
   async addText(req, res) {
     try {
       // Ensure the user is an admin
-      if (req.user.role !== "admin") {
+      if (req.user.user !== "admin") {
         console.log("Permission denied. Only admins can create text entries.");
         return res.status(403).json({ message: "Permission denied. Only admins can create text entries." });
       }
@@ -15,7 +15,7 @@ const adminTextController = {
         subject: req.body.subject,
         subtitle: req.body.subtitle,
         textArea: req.body.textArea,
-        id: req.user._id, // Use the authenticated user's ID
+        id: req.user.id, // Use the authenticated user's ID
       });
 
       // Save the new text entry
@@ -32,10 +32,10 @@ const adminTextController = {
   // Method for viewing text by ID
   async viewText(req, res) {
     try {
-      const { _id } = req.params;
+      // const { _id } = req.params;
 
       // Find the text entry by ID and populate the 'id' field with user data
-      const text = await textModel.findById(_id).populate('id');
+      const text = await textModel.find();
       if (!text) {
         return res.status(404).json({ message: "Text entry not found." });
       }
