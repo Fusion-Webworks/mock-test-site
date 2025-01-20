@@ -13,14 +13,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   name: { type: String, required: true },
   password: { type: String, required: true },
-<<<<<<< HEAD
   user: { type: String, enum: ["admin", "user","guest"], default: "guest" }, // Optional field
   id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-=======
-  user: { type: String, enum: ["admin", "user"], required: true },
-  subject: { type: [subjectSchema],default: [] },
-  id: { type: mongoose.Schema.Types.ObjectId, auto: true},
->>>>>>> 86e34f560cbd3401c78b3053e83defcca35f8d00
 });
 
 
