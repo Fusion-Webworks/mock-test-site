@@ -7,9 +7,11 @@ const adminTextController = {
       // Ensure the user is an admin
       if (req.user.user !== "admin") {
         console.log("Permission denied. Only admins can create text entries.");
-        return res.status(403).json({
-          message: "Permission denied. Only admins can create text entries.",
-        });
+        return res
+          .status(403)
+          .json({
+            message: "Permission denied. Only admins can create text entries.",
+          });
       }
 
       // Create a new text entry based on the request body
@@ -32,10 +34,12 @@ const adminTextController = {
         "An error occurred while creating the text entry:",
         error.message
       );
-      res.status(500).json({
-        message: "An error occurred while creating the text entry.",
-        error: error.message,
-      });
+      res
+        .status(500)
+        .json({
+          message: "An error occurred while creating the text entry.",
+          error: error.message,
+        });
     }
   },
 
@@ -45,7 +49,7 @@ const adminTextController = {
       // const { _id } = req.params;
 
       // Find the text entry by ID and populate the 'id' field with user data
-      const text = await textModel.findById(_id).populate("id");
+      const text = await textModel.find();
       if (!text) {
         return res.status(404).json({ message: "Text entry not found." });
       }
@@ -56,10 +60,12 @@ const adminTextController = {
         "An error occurred while viewing the text entry:",
         error.message
       );
-      res.status(500).json({
-        message: "An error occurred while viewing the text entry.",
-        error: error.message,
-      });
+      res
+        .status(500)
+        .json({
+          message: "An error occurred while viewing the text entry.",
+          error: error.message,
+        });
     }
   },
 };
