@@ -7,12 +7,14 @@ const adminTextController = {
       // Ensure the user is an admin
       if (req.user.user !== "admin") {
         console.log("Permission denied. Only admins can create text entries.");
-        return res.status(403).json({ message: "Permission denied. Only admins can create text entries." });
+        return res.status(403).json({
+          message: "Permission denied. Only admins can create text entries.",
+        });
       }
 
       // Create a new text entry based on the request body
       const newText = new textModel({
-        subject: req.body.subject,
+        title: req.body.subject,
         subtitle: req.body.subtitle,
         textArea: req.body.textArea,
         id: req.user.id, // Use the authenticated user's ID
@@ -22,10 +24,18 @@ const adminTextController = {
       await newText.save();
 
       console.log("Text entry created successfully.");
-      res.status(201).json({ message: "Text entry created successfully.", text: newText });
+      res
+        .status(201)
+        .json({ message: "Text entry created successfully.", text: newText });
     } catch (error) {
-      console.error("An error occurred while creating the text entry:", error.message);
-      res.status(500).json({ message: "An error occurred while creating the text entry.", error: error.message });
+      console.error(
+        "An error occurred while creating the text entry:",
+        error.message
+      );
+      res.status(500).json({
+        message: "An error occurred while creating the text entry.",
+        error: error.message,
+      });
     }
   },
 
@@ -42,10 +52,16 @@ const adminTextController = {
 
       res.status(200).json({ text });
     } catch (error) {
-      console.error("An error occurred while viewing the text entry:", error.message);
-      res.status(500).json({ message: "An error occurred while viewing the text entry.", error: error.message });
+      console.error(
+        "An error occurred while viewing the text entry:",
+        error.message
+      );
+      res.status(500).json({
+        message: "An error occurred while viewing the text entry.",
+        error: error.message,
+      });
     }
-  }
+  },
 };
 
 module.exports = adminTextController;
