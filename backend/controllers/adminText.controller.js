@@ -14,7 +14,7 @@ const adminTextController = {
 
       // Create a new text entry based on the request body
       const newText = new textModel({
-        subject: req.body.subject,
+        title: req.body.subject,
         subtitle: req.body.subtitle,
         textArea: req.body.textArea,
         id: req.user.id, // Use the authenticated user's ID
