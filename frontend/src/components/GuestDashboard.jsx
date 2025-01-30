@@ -13,13 +13,13 @@ const GuestDashboard = () => {
     const fetchAdminData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/adminText/view"
+          "https://mocktest-backend-ho52.onrender.com/api/v1/adminText/view"
         );
         setData(response.data.text);
       } catch (error) {
         console.error("Error fetching admin data:", error);
         toast.error("Failed to load data!");
-        data
+        data;
       } finally {
         setLoading(false);
       }

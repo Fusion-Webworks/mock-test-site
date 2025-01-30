@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -12,13 +12,11 @@ const Login = () => {
     setFormData({ ...formData, [name]: value });
   };
 
- 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/auth/login",
+        "https://mocktest-backend-ho52.onrender.com/api/v1/auth/login",
         formData
       );
       toast.success("Login successful!");
@@ -31,8 +29,6 @@ const Login = () => {
       console.error("Error:", error.response?.data || error.message);
     }
   };
-
-
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-100">

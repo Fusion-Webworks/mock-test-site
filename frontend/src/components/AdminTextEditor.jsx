@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // Import jwt-decode
 import ReactQuill from "react-quill";
@@ -23,7 +23,7 @@ const AdminTextEditor = () => {
       const payload = { title, subtitle, textArea, id: userId };
 
       const response = await axios.post(
-        "http://localhost:3000/api/v1/adminText/add",
+        "https://mocktest-backend-ho52.onrender.com/api/v1/adminText/add",
         payload,
         {
           headers: {

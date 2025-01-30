@@ -21,7 +21,7 @@ const UserDashboard = () => {
         if (!token) return profileError();
 
         const { data } = await axios.get(
-          "http://localhost:3000/api/v1/auth/profile",
+          "https://mocktest-backend-ho52.onrender.com/api/v1/auth/profile",
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -43,7 +43,9 @@ const UserDashboard = () => {
       if (!user?._id) return;
       setLoadingText(true); // Start loading text data
       try {
-        const { data } = await axios.get("http://localhost:3000/api/v1/adminText/view");
+        const { data } = await axios.get(
+          "https://mocktest-backend-ho52.onrender.com/api/v1/adminText/view"
+        );
         setText(data.text);
       } catch (error) {
         console.error("Error fetching text:", error);
@@ -72,13 +74,18 @@ const UserDashboard = () => {
     navigate(`/card-details/${item._id}`, { state: { item } });
   };
 
-  if (loadingUser) return <div className="text-center text-lg font-bold">Loading...</div>;
+  if (loadingUser)
+    return <div className="text-center text-lg font-bold">Loading...</div>;
 
   if (user?.role === "admin") return <AdminDashboard />;
   if (user?.role === "guest") return <GuestDashboard />;
 
   const filteredText =
-    filter === "All" ? text : text.filter((item) => item.title.toLowerCase() === filter.toLowerCase());
+    filter === "All"
+      ? text
+      : text.filter(
+          (item) => item.title.toLowerCase() === filter.toLowerCase()
+        );
 
   return (
     <div className="relative p-12">
@@ -89,26 +96,33 @@ const UserDashboard = () => {
         Logout
       </button>
       <div className="text-center">
-        <h1 className="text-3xl font-bold mb-4">Welcome to the User Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-4">
+          Welcome to the User Dashboard
+        </h1>
       </div>
       <div className="flex flex-row">
         <div className="flex flex-col mx-10 gap-4">
           <b>FILTERS:-</b>
-          {["All", "Mathematics", "HCI", "CS IT", "Business Communications", "Programming in C"].map(
-            (subject) => (
-              <label key={subject} className="cursor-pointer">
-                <input
-                  type="radio"
-                  name="filter"
-                  value={subject}
-                  checked={filter === subject}
-                  onChange={(e) => setFilter(e.target.value)}
-                  className="mr-2"
-                />
-                {subject}
-              </label>
-            )
-          )}
+          {[
+            "All",
+            "Mathematics",
+            "HCI",
+            "CS IT",
+            "Business Communications",
+            "Programming in C",
+          ].map((subject) => (
+            <label key={subject} className="cursor-pointer">
+              <input
+                type="radio"
+                name="filter"
+                value={subject}
+                checked={filter === subject}
+                onChange={(e) => setFilter(e.target.value)}
+                className="mr-2"
+              />
+              {subject}
+            </label>
+          ))}
         </div>
 
         <div className="flex-1">
@@ -125,7 +139,9 @@ const UserDashboard = () => {
                   onClick={() => openCardDetails(item)}
                 >
                   <h2 className="text-xl font-bold mb-2">{item.title}</h2>
-                  <h3 className="text-md font-semibold mb-1 text-gray-600">{item.subtitle}</h3>
+                  <h3 className="text-md font-semibold mb-1 text-gray-600">
+                    {item.subtitle}
+                  </h3>
                 </div>
               ))}
             </div>
