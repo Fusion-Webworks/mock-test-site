@@ -9,7 +9,7 @@ const SignIn = () => {
         email: "",
         password: "",
         confirmPassword: "",
-        user: "user", // Default value
+        user: "guest", // Default value
       });
       
 

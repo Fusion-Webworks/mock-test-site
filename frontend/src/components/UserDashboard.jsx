@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import AdminDashboard from "./AdminDashboard";
+import GuestDashboard from "./GuestDashboard";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const UserDashboard = () => {
   const [user, setUser] = useState(null); // Start as null for proper loading check
   const [text, setText] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("All"); // Default filter is "All"
 
   // Fetch user profile
   useEffect(() => {
@@ -34,8 +36,9 @@ const UserDashboard = () => {
           return;
         }
         setUser(userData);
-      } catch (error) {
+      } catch (err) {
         profileError();
+        err.message();
       } finally {
         setLoading(false);
       }
@@ -81,6 +84,12 @@ const UserDashboard = () => {
   if (loading) return <div>Loading...</div>;
 
   if (user?.user === "admin") return <AdminDashboard />;
+if(user?.user === "guest") return <GuestDashboard />;
+  // Filter the text array based on the selected filter
+  const filteredText =
+    filter === "All"
+      ? text
+      : text.filter((item) => item.title.toLowerCase() === filter.toLowerCase());
 
   return (
     <div className="relative p-12">
@@ -95,19 +104,44 @@ const UserDashboard = () => {
           Welcome to the User Dashboard
         </h1>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-        {text.map((item) => (
-          <div
-            key={item._id}
-            className="p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow cursor-pointer"
-            onClick={() => openCardDetails(item)}
-          >
-            <h2 className="text-xl font-bold mb-2">{item.title}</h2>
-            <h3 className="text-md font-semibold mb-1 text-gray-600">
-              {item.subtitle}
-            </h3>
-          </div>
-        ))}
+      <div className="flex flex-row">
+        <div className="flex flex-col mx-10 gap-4">
+        <b>FILTERS:-</b>
+          {/* Radio buttons for filtering */}
+          {["All", "Mathematics", "HCI", "CS IT", "Buisness Comunications", "Programming in C"].map(
+            (subject) => (
+              
+              <div key={subject}>
+               
+                <label>
+                  <input
+                    type="radio"
+                    name="filter"
+                    value={subject}
+                    checked={filter === subject} // Set the checked status
+                    onChange={(e) => setFilter(e.target.value)} // Set the selected filter value
+                    className="mr-2"
+                  />
+                  {subject}
+                </label>
+              </div>
+            )
+          )}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+          {filteredText.map((item) => (
+            <div
+              key={item._id}
+              className="p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow cursor-pointer"
+              onClick={() => openCardDetails(item)}
+            >
+              <h2 className="text-xl font-bold mb-2">{item.title}</h2>
+              <h3 className="text-md font-semibold mb-1 text-gray-600">
+                {item.subtitle}
+              </h3>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
