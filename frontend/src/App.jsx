@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./components/Login.jsx";
+import Login from "./components/LogIn.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Don't forget to import the CSS for toast notifications
 import UserDashboard from "./components/UserDashboard.jsx";
