@@ -27,7 +27,6 @@ app.use(
     credentials: true, // Allow credentials if needed (JWT, Cookies, etc.)
   })
 );
-
 // Handle preflight requests manually
 app.options("*", cors()); // Allow preflight requests for all routes
 
