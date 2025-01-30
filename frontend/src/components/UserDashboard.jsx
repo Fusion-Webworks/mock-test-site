@@ -8,67 +8,58 @@ import GuestDashboard from "./GuestDashboard";
 const UserDashboard = () => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(null); // Start as null for proper loading check
+  const [user, setUser] = useState(null);
   const [text, setText] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("All"); // Default filter is "All"
+  const [loadingUser, setLoadingUser] = useState(true);
+  const [loadingText, setLoadingText] = useState(false); // Separate loading for text
+  const [filter, setFilter] = useState("All");
 
-  // Fetch user profile
   useEffect(() => {
     const getUserProfile = async () => {
       try {
-        if (!localStorage.getItem("token")) {
-          profileError();
-          return;
-        }
-        const response = await axios.get(
+        const token = localStorage.getItem("token");
+        if (!token) return profileError();
+
+        const { data } = await axios.get(
           "http://localhost:3000/api/v1/auth/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "Content-Type": "application/json",
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
-        const userData = response.data.user;
-        if (!userData) {
-          profileError();
-          return;
-        }
-        setUser(userData);
+
+        if (!data.user) return profileError();
+        setUser(data.user);
       } catch (err) {
+        console.error("Profile Fetch Error:", err.message);
         profileError();
-        err.message();
       } finally {
-        setLoading(false);
+        setLoadingUser(false);
       }
     };
 
     getUserProfile();
   }, []);
 
-  // Fetch admin text based on the user
   useEffect(() => {
     const getText = async () => {
       if (!user?._id) return;
+      setLoadingText(true); // Start loading text data
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/v1/adminText/view`
-        );
-        setText(response.data.text);
+        const { data } = await axios.get("http://localhost:3000/api/v1/adminText/view");
+        setText(data.text);
       } catch (error) {
         console.error("Error fetching text:", error);
         toast.error("Failed to fetch text!");
+      } finally {
+        setLoadingText(false); // Stop loading when done
       }
     };
 
     getText();
-  }, [user]);
+  }, [user?._id]); // Dependency optimized
 
   const profileError = () => {
     toast.error("Failed to fetch user profile!");
-    navigate("/login");
     localStorage.clear();
+    navigate("/login");
   };
 
   const handleLogout = () => {
@@ -81,15 +72,13 @@ const UserDashboard = () => {
     navigate(`/card-details/${item._id}`, { state: { item } });
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loadingUser) return <div className="text-center text-lg font-bold">Loading...</div>;
 
-  if (user?.user === "admin") return <AdminDashboard />;
-if(user?.user === "guest") return <GuestDashboard />;
-  // Filter the text array based on the selected filter
+  if (user?.role === "admin") return <AdminDashboard />;
+  if (user?.role === "guest") return <GuestDashboard />;
+
   const filteredText =
-    filter === "All"
-      ? text
-      : text.filter((item) => item.title.toLowerCase() === filter.toLowerCase());
+    filter === "All" ? text : text.filter((item) => item.title.toLowerCase() === filter.toLowerCase());
 
   return (
     <div className="relative p-12">
@@ -100,47 +89,47 @@ if(user?.user === "guest") return <GuestDashboard />;
         Logout
       </button>
       <div className="text-center">
-        <h1 className="text-3xl font-bold mb-4">
-          Welcome to the User Dashboard
-        </h1>
+        <h1 className="text-3xl font-bold mb-4">Welcome to the User Dashboard</h1>
       </div>
       <div className="flex flex-row">
         <div className="flex flex-col mx-10 gap-4">
-        <b>FILTERS:-</b>
-          {/* Radio buttons for filtering */}
-          {["All", "Mathematics", "HCI", "CS IT", "Buisness Comunications", "Programming in C"].map(
+          <b>FILTERS:-</b>
+          {["All", "Mathematics", "HCI", "CS IT", "Business Communications", "Programming in C"].map(
             (subject) => (
-              
-              <div key={subject}>
-               
-                <label>
-                  <input
-                    type="radio"
-                    name="filter"
-                    value={subject}
-                    checked={filter === subject} // Set the checked status
-                    onChange={(e) => setFilter(e.target.value)} // Set the selected filter value
-                    className="mr-2"
-                  />
-                  {subject}
-                </label>
-              </div>
+              <label key={subject} className="cursor-pointer">
+                <input
+                  type="radio"
+                  name="filter"
+                  value={subject}
+                  checked={filter === subject}
+                  onChange={(e) => setFilter(e.target.value)}
+                  className="mr-2"
+                />
+                {subject}
+              </label>
             )
           )}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          {filteredText.map((item) => (
-            <div
-              key={item._id}
-              className="p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow cursor-pointer"
-              onClick={() => openCardDetails(item)}
-            >
-              <h2 className="text-xl font-bold mb-2">{item.title}</h2>
-              <h3 className="text-md font-semibold mb-1 text-gray-600">
-                {item.subtitle}
-              </h3>
+
+        <div className="flex-1">
+          {loadingText ? (
+            <div className="flex justify-center items-center h-40">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
             </div>
-          ))}
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+              {filteredText.map((item) => (
+                <div
+                  key={item._id}
+                  className="p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow cursor-pointer"
+                  onClick={() => openCardDetails(item)}
+                >
+                  <h2 className="text-xl font-bold mb-2">{item.title}</h2>
+                  <h3 className="text-md font-semibold mb-1 text-gray-600">{item.subtitle}</h3>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
