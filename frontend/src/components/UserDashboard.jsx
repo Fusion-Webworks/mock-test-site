@@ -79,7 +79,6 @@ const UserDashboard = () => {
   
   if (user?.user?.toLowerCase() === "admin") return <AdminDashboard />;
   if (user?.user?.toLowerCase() === "guest") return <GuestDashboard />;
-  console.log(user.user)
   const filteredText =
     filter === "All"
       ? text
