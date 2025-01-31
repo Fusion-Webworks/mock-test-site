@@ -76,10 +76,10 @@ const UserDashboard = () => {
 
   if (loadingUser)
     return <div className="text-center text-lg font-bold">Loading...</div>;
-
-  if (user?.role === "admin") return <AdminDashboard />;
-  if (user?.role === "guest") return <GuestDashboard />;
-
+  
+  if (user?.user?.toLowerCase() === "admin") return <AdminDashboard />;
+  if (user?.user?.toLowerCase() === "guest") return <GuestDashboard />;
+  console.log(user.user)
   const filteredText =
     filter === "All"
       ? text
