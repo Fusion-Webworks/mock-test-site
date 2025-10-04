@@ -20,6 +20,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://mock-test-site-frontend.vercel.app",
+      "https://mock-test-site-frontend.vercel.app/",
       "https://mocktest-backend-ho52.onrender.com",
     ], // Allow frontend and backend origins
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow necessary HTTP methods
